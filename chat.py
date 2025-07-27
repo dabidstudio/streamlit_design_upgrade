@@ -46,6 +46,7 @@ with col2:
         max_value=2.0,
         value=st.session_state["temperature"],
         step=0.1,
+        help="높을수록 더 창의적이고 다양한 응답을, 낮을수록 더 일관된 응답을 생성합니다."
     )
 
 # Reset button in a single column
@@ -64,20 +65,56 @@ if st.button("대화 기록 초기화", type="primary"):
 
 st.divider()
 
+# Add sidebar
+with st.sidebar:
+    st.write("### 채팅 설정")
+    
+    # Add expander for chat settings
+    with st.expander("고급 설정", expanded=True):
+        # System prompt editor
+        system_prompt = st.text_area(
+            "시스템 프롬프트",
+            value=system_message,
+            help="AI의 페르소나를 설정하는 프롬프트입니다."
+        )
+        
+        # Save changes button
+        if st.button("설정 저장"):
+            st.session_state.messages[0]["content"] = system_prompt
+            st.success("설정이 저장되었습니다!")
+            
+    # Add information about the chat
+    st.info("""
+    💡 **사용 팁**
+    - Temperature를 낮추면 더 일관된 답변을
+    - Temperature를 높이면 더 창의적인 답변을
+    - GPT-4o는 더 정확하지만 느립니다
+    - GPT-4o-mini는 더 빠르지만 간단합니다
+    """)
+    
+    # Add message count
+    if len(st.session_state.messages) > 1:
+        st.metric(
+            "대화 수", 
+            len(st.session_state.messages) - 1,  # Subtract 1 to exclude system message
+            help="현재까지의 대화 수입니다."
+        )
+
 
 # Display chat messages
 for idx, message in enumerate(st.session_state.messages):
     if idx > 0:  # Skip system message
-        with st.chat_message(message["role"], ):
+        icon = "🤖" if message["role"] == "assistant" else ":material/person:"
+        with st.chat_message(message["role"], avatar=icon):
             st.markdown(message["content"])
 
 # Chat input
 if prompt := st.chat_input("메시지를 입력하세요..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
+    with st.chat_message("user", avatar=":material/person:"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+    with st.chat_message("assistant", avatar="🤖"):
         stream = client.chat.completions.create(
             model=st.session_state["openai_model"],
             messages=[
