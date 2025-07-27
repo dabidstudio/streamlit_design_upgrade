@@ -1,0 +1,33 @@
+[server]
+enableStaticServing=true
+
+[[theme.fontFaces]]
+url = "app/static/PretendardVariable.ttf"
+family = "Pretendard"
+
+
+[theme]
+showSidebarBorder = true
+font = "Pretendard, sans-serif"
+baseFontSize = 14
+
+# headingFontSizes = ["2.125rem", "1.875rem", "1.5rem", "1.25rem"]
+headingFontSizes = ["1.7rem", "1.5rem", "1.2rem", "1rem"]
+
+
+# 챗GPT 다크모드 스타일
+primaryColor = "#10A37F"      
+backgroundColor = "#1E1E1E"   
+secondaryBackgroundColor = "#262626"  
+textColor = "#FFFFFF"         
+
+baseRadius = "1rem"          # 대부분 UI 컴포넌트 둥글게
+buttonRadius = "2rem"        # 버튼은 pill 스타일 (완전 동그랗게)
+
+
+
+[ui]
+hideTopBar = true
+
+[client]
+toolbarMode = "viewer"
